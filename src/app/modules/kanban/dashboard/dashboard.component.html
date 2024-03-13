@@ -1,2 +1,27 @@
 <app-header></app-header>
-<p>dashboard works!</p>
+
+<main class="kanban-container">
+  <div class="btn-area">
+    <button class="btn btn-plus">
+      <i class="pi pi-plus"></i>
+      <p>Criar coluna</p>
+    </button>
+    <button class="btn btn-alter">
+      <i class="pi pi-pencil"></i>
+      <p>Alterar coluna</p>
+    </button>
+    <button class="btn btn-trash">
+      <i class="pi pi-trash"></i>
+      <p>Deletar coluna</p>
+    </button>
+  </div>
+
+  <section class="columns-area">
+    <app-columns
+      *ngFor="let item of columnsDatas"
+      [title]="item.title"
+      [id]="item.id"
+      [cards]="getCardsByColumn(item.id)"
+    ></app-columns>
+  </section>
+</main>
