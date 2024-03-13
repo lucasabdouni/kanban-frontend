@@ -7,7 +7,11 @@
     <button type="submit" [disabled]="!this.loginForm.valid">
       Fazer login
     </button>
+
+    <app-message-error></app-message-error>
   </form>
 
-  <a href="#" class="register"> <i class="pi pi-user-plus"></i>Registre-se </a>
+  <a routerLink="/register" class="register">
+    <i class="pi pi-user-plus"></i>Registre-se
+  </a>
 </main>
