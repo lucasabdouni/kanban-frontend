@@ -4,11 +4,15 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmitLoginForm()">
     <input type="email" placeholder="Email" formControlName="email" />
     <input type="password" placeholder="Senha" formControlName="password" />
-    <button type="submit" [disabled]="!this.loginForm.valid">
+    <button type="submit" [disabled]="!this.loginForm.valid || isLoading">
       Fazer login
     </button>
 
-    <app-message-error></app-message-error>
+    <app-message-error
+      class="msg-error slideInDown"
+      text="{{ textError }}"
+      [isError]="isError"
+    ></app-message-error>
   </form>
 
   <a routerLink="/register" class="register">

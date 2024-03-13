@@ -13,6 +13,9 @@ import { UserService } from './../../service/user.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  public isError: boolean = false;
+  public textError!: string;
+  public isLoading: boolean = false;
 
   loginForm = this.formBuilder.group({
     email: ['', Validators.required, ''],
@@ -34,6 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onSubmitLoginForm(): void {
     if (this.loginForm.value && this.loginForm.valid) {
+      this.isLoading = true;
+
       this.userService
         .auth(this.loginForm.value as AuthRequest)
         .pipe(takeUntil(this.destroy$))
@@ -42,10 +47,14 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (response) {
               this.cookieService.set('token', response.token);
               this.router.navigate(['/kanban']);
+              this.isError = false;
+              this.isLoading = false;
             }
           },
-          error: (error) => {
-            console.log('error');
+          error: (_) => {
+            this.textError = 'Credenciais invalidas !';
+            this.isError = true;
+            this.isLoading = false;
           },
         });
     }
