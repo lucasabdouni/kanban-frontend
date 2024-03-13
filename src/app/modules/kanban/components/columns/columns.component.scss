@@ -1,0 +1,32 @@
+@import "../../../../../partials/rem-calc.scss";
+
+.column-container {
+  width: rem-calc(350);
+
+  border-radius: rem-calc(20);
+
+  height: 70vh;
+  background-color: var(--background-secondary);
+}
+
+.column-container .column-header {
+  width: 100%;
+  padding: rem-calc(30);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--secondary);
+  color: var(--text-dark);
+  border-top-left-radius: rem-calc(20);
+  border-top-right-radius: rem-calc(20);
+}
+
+.column-container .card-area {
+  width: 100%;
+  padding: rem-calc(15) 0;
+
+  display: flex;
+  justify-content: center;
+}
