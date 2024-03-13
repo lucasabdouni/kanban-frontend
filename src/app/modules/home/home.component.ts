@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthRequest } from 'src/app/models/interface/user/auth/AuthRequest';
-import { UserService } from './../../service/user.service';
+import { UserService } from '../../service/user/user.service';
 
 @Component({
   selector: 'app-home',
