@@ -12,6 +12,9 @@ import { UserService } from 'src/app/service/user.service';
 })
 export class SignUpComponent {
   private destroy$ = new Subject<void>();
+  public isError: boolean = false;
+  public textError!: string;
+  public isLoading: boolean = false;
 
   createUserForm = this.formBuilder.group({
     name: ['', Validators.required],
@@ -27,22 +30,28 @@ export class SignUpComponent {
 
   onSubmitcreateUserForm(): void {
     if (this.createUserForm.value && this.createUserForm.valid) {
+      this.isLoading = true;
+
       this.userService
         .create(this.createUserForm.value as createUserRequest)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
             if (response) {
+              this.isError = false;
+              this.isLoading = false;
               this.router.navigate(['/']);
-              console.log(response);
             }
           },
           error: (error) => {
+            this.isLoading = false;
+            console.log(error.message === 'E-mail already registered.');
             if (error.message === 'E-mail already registered.') {
-              console.log(error.message);
+              this.textError = 'Email já cadastrado !';
+              this.isError = true;
+            } else {
+              this.textError = 'Desculpe, tente novamente !';
             }
-
-            console.log(error.message);
           },
         });
     }

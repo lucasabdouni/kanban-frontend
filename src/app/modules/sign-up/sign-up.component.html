@@ -9,6 +9,12 @@
     <button type="submit" [disabled]="!this.createUserForm.valid">
       Cadastrar
     </button>
+
+    <app-message-error
+      class="msg-error slideInDown"
+      text="{{ textError }}"
+      [isError]="isError"
+    ></app-message-error>
   </form>
 
   <a routerLink="/" class="register">
