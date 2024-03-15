@@ -69,5 +69,7 @@ main .columns-area {
   justify-content: center;
   gap: rem-calc(55);
 
+  flex-wrap: wrap;
+
   margin-top: rem-calc(40);
 }

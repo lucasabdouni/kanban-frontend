@@ -2,17 +2,9 @@
 
 <main class="kanban-container">
   <div class="btn-area">
-    <button class="btn btn-plus">
+    <button class="btn btn-plus" (click)="handleColumnEvent(addColumnEvent)">
       <i class="pi pi-plus"></i>
       <p>Criar coluna</p>
-    </button>
-    <button class="btn btn-alter">
-      <i class="pi pi-pencil"></i>
-      <p>Alterar coluna</p>
-    </button>
-    <button class="btn btn-trash">
-      <i class="pi pi-trash"></i>
-      <p>Deletar coluna</p>
     </button>
   </div>
 
@@ -22,6 +14,12 @@
       [title]="item.title"
       [id]="item.id"
       [cards]="getCardsByColumn(item.id)"
+      (editColumnEvent)="handleColumnEvent($event.action, $event.id)"
+      (deleteColumnEvent)="handleDeleteColumnEvent($event)"
+      (editCardEvent)="handleCardEvent($event.action, $event.id)"
+      (deleteCardEvent)="handleEventDeleteCard($event)"
+      (addCardEvent)="handleCardEvent($event.action, $event.id)"
+      (alterColumnToCardEvent)="handleColumnEvent($event.action, $event.id)"
     ></app-columns>
   </section>
 </main>
