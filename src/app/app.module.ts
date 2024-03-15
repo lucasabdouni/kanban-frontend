@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -13,15 +13,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './modules/home/home.component';
 import { SignUpComponent } from './modules/sign-up/sign-up.component';
-import { MessageErrorComponent } from './shared/components/message-error/message-error.component';
+import { TokenInterceptor } from './service/user/auth.interceptor';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    SignUpComponent,
-    MessageErrorComponent,
-  ],
+  declarations: [AppComponent, HomeComponent, SignUpComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -29,8 +25,16 @@ import { MessageErrorComponent } from './shared/components/message-error/message
     ReactiveFormsModule,
     HttpClientModule,
     GraphQLModule,
+    SharedModule,
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
