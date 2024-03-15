@@ -5,9 +5,9 @@ import { Events } from 'src/app/models/enums/Events';
 import { EventAction } from 'src/app/models/interface/EventAction';
 
 import { DeleteCardActions } from 'src/app/models/interface/card/actions/DeleteCardActions';
-import { GetAllCardsResponse } from 'src/app/models/interface/card/response/GetAllCardsResponse';
+import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
 import { DeleteColumnsActions } from 'src/app/models/interface/column/actions/DeleteColumnsActions';
-import { GetAllColumnsResponse } from 'src/app/models/interface/column/response/GetAllColumnsResponse';
+import { ColumnsResponse } from 'src/app/models/interface/column/response/ColumnsResponse';
 import { UserResponse } from 'src/app/models/interface/user/user/response/UserResponse';
 import { UserService } from 'src/app/service/user/user.service';
 import { DialogComponent } from '../components/dialog/dialog.component';
@@ -22,15 +22,15 @@ import { ColumnService } from './../../../service/column/column.service';
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
-  public columnsDatas: Array<GetAllColumnsResponse> = [];
-  public cardsDatas: Array<GetAllCardsResponse> = [];
+  public columnsDatas: Array<ColumnsResponse> = [];
+  public cardsDatas: Array<CardsResponse> = [];
   public userDatas: Array<UserResponse> = [];
 
   public addColumnEvent = Events.ADD_COLUMN_EVENT;
   public editColumnEvent = Events.EDIT_COLUMN_EVENT;
   public addCardEvent = Events.ADD_CARD_EVENT;
   public editCardEvent = Events.EDIT_CARD_EVENT;
-  public alterColumnToCard = Events.EDIT_COLUMN_TO_CARD;
+  public editColumnToCard = Events.EDIT_COLUMN_TO_CARD;
 
   constructor(
     private columnService: ColumnService,
@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  getCardsByColumn(columnId: string): GetAllCardsResponse[] {
+  getCardsByColumn(columnId: string): CardsResponse[] {
     return this.cardsDatas.filter((card) => card.columnsTable.id === columnId);
   }
 
@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.handleEventAction({ action, id }, this.columnsDatas);
     }
 
-    if (action === this.alterColumnToCard) {
+    if (action === this.editColumnToCard) {
       this.handleEventAction({ action, id }, this.columnsDatas);
     }
   }
@@ -123,7 +123,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   handleEventAction(
     event: EventAction,
-    data?: GetAllColumnsResponse[] | GetAllCardsResponse[]
+    data?: ColumnsResponse[] | CardsResponse[]
   ): void {
     if (event) {
       this.ref = this.dialogService.open(DialogComponent, {

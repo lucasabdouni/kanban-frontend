@@ -5,9 +5,9 @@ import {
   ApolloTestingModule,
 } from 'apollo-angular/testing';
 import { CookieService } from 'ngx-cookie-service';
-import { CreateColumnRequest } from 'src/app/models/interface/column/request/createColumnRequest';
-import { EditColumnRequest } from 'src/app/models/interface/column/request/editColumnRequest';
-import { GetAllColumnsResponse } from 'src/app/models/interface/column/response/GetAllColumnsResponse';
+import { CreateColumnRequest } from 'src/app/models/interface/column/request/CreateColumnRequest';
+import { EditColumnRequest } from 'src/app/models/interface/column/request/EditColumnRequest';
+import { ColumnsResponse } from 'src/app/models/interface/column/response/ColumnsResponse';
 import { ColumnService } from './column.service';
 
 describe('ColumnService', () => {
@@ -33,7 +33,7 @@ describe('ColumnService', () => {
 
   describe('Get all columns', () => {
     it('should return all columns', () => {
-      const mockColumns: Array<GetAllColumnsResponse> = [
+      const mockColumns: Array<ColumnsResponse> = [
         { id: '1', title: 'Column 1' },
         { id: '2', title: 'Column 2' },
       ];
@@ -58,7 +58,7 @@ describe('ColumnService', () => {
         title: 'new column',
       };
 
-      const mockColumnReturn: GetAllColumnsResponse = {
+      const mockColumnReturn: ColumnsResponse = {
         id: '1',
         title: 'new column',
       };

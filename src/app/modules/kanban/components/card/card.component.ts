@@ -13,7 +13,7 @@ export class CardComponent {
   @Input() responsable!: string;
   @Output() editCardEvent = new EventEmitter();
   @Output() deleteCardEvent = new EventEmitter();
-  @Output() alterColumnToCardEvent = new EventEmitter();
+  @Output() editColumnToCardEvent = new EventEmitter();
 
   public cardEventEdit = Events.EDIT_CARD_EVENT;
   public cardAlterColumnEdit = Events.EDIT_COLUMN_TO_CARD;
@@ -30,9 +30,9 @@ export class CardComponent {
     }
   }
 
-  handleAlterColumnToCardEvent(action: string, id: string): void {
+  handleEditColumnToCardEvent(action: string, id: string): void {
     if (action !== '' && id !== '') {
-      this.alterColumnToCardEvent.emit({ action, id });
+      this.editColumnToCardEvent.emit({ action, id });
     }
   }
 }

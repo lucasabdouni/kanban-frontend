@@ -3,10 +3,10 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, map } from 'rxjs';
-import { AlterColumnToCard } from 'src/app/models/interface/card/request/alterColumnToCard';
-import { CreateCardRequest } from 'src/app/models/interface/card/request/createCardRequest';
-import { EditCardRequest } from 'src/app/models/interface/card/request/editCardRequest';
-import { GetAllCardsResponse } from 'src/app/models/interface/card/response/GetAllCardsResponse';
+import { CreateCardRequest } from 'src/app/models/interface/card/request/CreateCardRequest';
+import { EditCardRequest } from 'src/app/models/interface/card/request/EditCardRequest';
+import { EditColumnToCard } from 'src/app/models/interface/card/request/EditColumnToCard';
+import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class CardService {
 
   constructor(private apollo: Apollo, private cookieService: CookieService) {}
 
-  getAllCards(): Observable<Array<GetAllCardsResponse>> {
+  getAllCards(): Observable<Array<CardsResponse>> {
     const query = gql`
       query GetAllCards {
         cards {
@@ -38,13 +38,13 @@ export class CardService {
     `;
 
     return this.apollo
-      .query<Array<GetAllCardsResponse>>({
+      .query<Array<CardsResponse>>({
         query: query,
         context: {
           headers: this.headers,
         },
       })
-      .pipe(map((result: any) => result.data.cards as GetAllCardsResponse[]));
+      .pipe(map((result: any) => result.data.cards as CardsResponse[]));
   }
 
   createCard({
@@ -52,7 +52,7 @@ export class CardService {
     description,
     column,
     user,
-  }: CreateCardRequest): Observable<GetAllCardsResponse> {
+  }: CreateCardRequest): Observable<CardsResponse> {
     {
       return this.apollo
         .mutate({
@@ -87,9 +87,7 @@ export class CardService {
             headers: this.headers,
           },
         })
-        .pipe(
-          map((result: any) => result.data.createCard as GetAllCardsResponse)
-        );
+        .pipe(map((result: any) => result.data.createCard as CardsResponse));
     }
   }
 
@@ -97,7 +95,7 @@ export class CardService {
     id,
     title,
     description,
-  }: EditCardRequest): Observable<GetAllCardsResponse> {
+  }: EditCardRequest): Observable<CardsResponse> {
     {
       return this.apollo
         .mutate({
@@ -126,16 +124,11 @@ export class CardService {
             headers: this.headers,
           },
         })
-        .pipe(
-          map((result: any) => result.data.updateCard as GetAllCardsResponse)
-        );
+        .pipe(map((result: any) => result.data.updateCard as CardsResponse));
     }
   }
 
-  editUserToCard({
-    id,
-    user,
-  }: EditCardRequest): Observable<GetAllCardsResponse> {
+  editUserToCard({ id, user }: EditCardRequest): Observable<CardsResponse> {
     return this.apollo
       .mutate({
         mutation: gql`
@@ -156,16 +149,14 @@ export class CardService {
         },
       })
       .pipe(
-        map(
-          (result: any) => result.data.updateUserToCard as GetAllCardsResponse
-        )
+        map((result: any) => result.data.updateUserToCard as CardsResponse)
       );
   }
 
-  alterColumnToCard({
+  editColumnToCard({
     id,
     column,
-  }: AlterColumnToCard): Observable<GetAllCardsResponse> {
+  }: EditColumnToCard): Observable<CardsResponse> {
     return this.apollo
       .mutate({
         mutation: gql`
@@ -186,9 +177,7 @@ export class CardService {
         },
       })
       .pipe(
-        map(
-          (result: any) => result.data.UpdateColumnToCard as GetAllCardsResponse
-        )
+        map((result: any) => result.data.UpdateColumnToCard as CardsResponse)
       );
   }
 

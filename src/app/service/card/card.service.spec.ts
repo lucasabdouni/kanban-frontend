@@ -4,10 +4,10 @@ import {
   ApolloTestingController,
   ApolloTestingModule,
 } from 'apollo-angular/testing';
-import { AlterColumnToCard } from 'src/app/models/interface/card/request/alterColumnToCard';
-import { CreateCardRequest } from 'src/app/models/interface/card/request/createCardRequest';
-import { EditCardRequest } from 'src/app/models/interface/card/request/editCardRequest';
-import { GetAllCardsResponse } from 'src/app/models/interface/card/response/GetAllCardsResponse';
+import { AlterColumnToCard } from 'src/app/models/interface/card/request/AlterColumnToCard';
+import { CreateCardRequest } from 'src/app/models/interface/card/request/CreateCardRequest';
+import { EditCardRequest } from 'src/app/models/interface/card/request/EditCardRequest';
+import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
 import { CardService } from './card.service';
 
 describe('CardService', () => {
@@ -33,7 +33,7 @@ describe('CardService', () => {
 
   describe('Get all cards', () => {
     it('should return all columns', () => {
-      const mockCards: Array<GetAllCardsResponse> = [
+      const mockCards: Array<CardsResponse> = [
         {
           id: '1',
           title: 'new title',
@@ -84,7 +84,7 @@ describe('CardService', () => {
         user: '1',
       };
 
-      const mockCardsReturn: GetAllCardsResponse = {
+      const mockCardsReturn: CardsResponse = {
         id: '1',
         title: 'new title',
         description: 'new description',
@@ -121,7 +121,7 @@ describe('CardService', () => {
         title: 'title update',
       };
 
-      const mockCardsReturn: GetAllCardsResponse = {
+      const mockCardsReturn: CardsResponse = {
         id: '1',
         title: 'title update',
         description: 'new description',
@@ -155,7 +155,7 @@ describe('CardService', () => {
         user: '2',
       };
 
-      const mockCardsReturn: GetAllCardsResponse = {
+      const mockCardsReturn: CardsResponse = {
         id: '1',
         title: 'title update',
         description: 'new description',
@@ -188,7 +188,7 @@ describe('CardService', () => {
         column: '2',
       };
 
-      const mockCardsReturn: GetAllCardsResponse = {
+      const mockCardsReturn: CardsResponse = {
         id: '1',
         title: 'title update',
         description: 'new description',

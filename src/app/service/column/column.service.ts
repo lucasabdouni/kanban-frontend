@@ -3,9 +3,9 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, map } from 'rxjs';
-import { CreateColumnRequest } from 'src/app/models/interface/column/request/createColumnRequest';
-import { EditColumnRequest } from 'src/app/models/interface/column/request/editColumnRequest';
-import { GetAllColumnsResponse } from 'src/app/models/interface/column/response/GetAllColumnsResponse';
+import { CreateColumnRequest } from 'src/app/models/interface/column/request/CreateColumnRequest';
+import { EditColumnRequest } from 'src/app/models/interface/column/request/EditColumnRequest';
+import { ColumnsResponse } from 'src/app/models/interface/column/response/ColumnsResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class ColumnService {
 
   constructor(private apollo: Apollo, private cookieService: CookieService) {}
 
-  getAllColumns(): Observable<Array<GetAllColumnsResponse>> {
+  getAllColumns(): Observable<Array<ColumnsResponse>> {
     const query = gql`
       query GetAllColumns {
         columns {
@@ -29,20 +29,16 @@ export class ColumnService {
     `;
 
     return this.apollo
-      .query<Array<GetAllColumnsResponse>>({
+      .query<Array<ColumnsResponse>>({
         query: query,
         context: {
           headers: this.headers,
         },
       })
-      .pipe(
-        map((result: any) => result.data.columns as GetAllColumnsResponse[])
-      );
+      .pipe(map((result: any) => result.data.columns as ColumnsResponse[]));
   }
 
-  createColumn({
-    title,
-  }: CreateColumnRequest): Observable<GetAllColumnsResponse> {
+  createColumn({ title }: CreateColumnRequest): Observable<ColumnsResponse> {
     {
       return this.apollo
         .mutate({
@@ -62,17 +58,12 @@ export class ColumnService {
           },
         })
         .pipe(
-          map(
-            (result: any) => result.data.createColumn as GetAllColumnsResponse
-          )
+          map((result: any) => result.data.createColumn as ColumnsResponse)
         );
     }
   }
 
-  editColumn({
-    id,
-    title,
-  }: EditColumnRequest): Observable<GetAllColumnsResponse> {
+  editColumn({ id, title }: EditColumnRequest): Observable<ColumnsResponse> {
     {
       return this.apollo
         .mutate({
@@ -93,9 +84,7 @@ export class ColumnService {
           },
         })
         .pipe(
-          map(
-            (result: any) => result.data.updateColumn as GetAllColumnsResponse
-          )
+          map((result: any) => result.data.updateColumn as ColumnsResponse)
         );
     }
   }

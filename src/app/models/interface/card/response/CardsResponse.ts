@@ -1,4 +1,4 @@
-export interface GetAllCardsResponse {
+export interface CardsResponse {
   id: string;
   title: string;
   description: string;

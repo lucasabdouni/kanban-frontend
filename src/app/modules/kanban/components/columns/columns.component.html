@@ -27,7 +27,7 @@
     [responsable]="item.user.name"
     (editCardEvent)="handleEditCardEvent($event)"
     (deleteCardEvent)="handleDeleteCardEvent($event)"
-    (alterColumnToCardEvent)="handleAlterColumnToCardEvent($event)"
+    (editColumnToCardEvent)="handleEditColumnToCardEvent($event)"
   ></app-card>
 
   <button class="btn-plus" (click)="handleAddCardEvent(AddCardEvent, id)">

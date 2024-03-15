@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Events } from 'src/app/models/enums/Events';
 import { EventAction } from 'src/app/models/interface/EventAction';
 import { DeleteCardActions } from 'src/app/models/interface/card/actions/DeleteCardActions';
-import { GetAllCardsResponse } from 'src/app/models/interface/card/response/GetAllCardsResponse';
+import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
 
 @Component({
   selector: 'app-columns',
@@ -12,13 +12,13 @@ import { GetAllCardsResponse } from 'src/app/models/interface/card/response/GetA
 export class ColumnsComponent {
   @Input() title!: string;
   @Input() id!: string;
-  @Input() cards: Array<GetAllCardsResponse> = [];
+  @Input() cards: Array<CardsResponse> = [];
   @Output() editColumnEvent = new EventEmitter();
   @Output() deleteColumnEvent = new EventEmitter();
   @Output() addCardEvent = new EventEmitter();
   @Output() editCardEvent = new EventEmitter();
   @Output() deleteCardEvent = new EventEmitter();
-  @Output() alterColumnToCardEvent = new EventEmitter();
+  @Output() editColumnToCardEvent = new EventEmitter();
 
   public columnEventEdit = Events.EDIT_COLUMN_EVENT;
   public AddCardEvent = Events.ADD_CARD_EVENT;
@@ -47,7 +47,7 @@ export class ColumnsComponent {
     this.deleteCardEvent.emit(event);
   }
 
-  handleAlterColumnToCardEvent(event: EventAction): void {
-    this.alterColumnToCardEvent.emit(event);
+  handleEditColumnToCardEvent(event: EventAction): void {
+    this.editColumnToCardEvent.emit(event);
   }
 }

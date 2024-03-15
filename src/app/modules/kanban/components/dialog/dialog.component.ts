@@ -3,11 +3,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
 import { Events } from 'src/app/models/enums/Events';
-import { CreateCardRequest } from 'src/app/models/interface/card/request/createCardRequest';
-import { GetAllCardsResponse } from 'src/app/models/interface/card/response/GetAllCardsResponse';
-import { CreateColumnRequest } from 'src/app/models/interface/column/request/createColumnRequest';
-import { EditColumnRequest } from 'src/app/models/interface/column/request/editColumnRequest';
-import { GetAllColumnsResponse } from 'src/app/models/interface/column/response/GetAllColumnsResponse';
+import { CreateCardRequest } from 'src/app/models/interface/card/request/CreateCardRequest';
+import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
+import { CreateColumnRequest } from 'src/app/models/interface/column/request/CreateColumnRequest';
+import { EditColumnRequest } from 'src/app/models/interface/column/request/EditColumnRequest';
+import { ColumnsResponse } from 'src/app/models/interface/column/response/ColumnsResponse';
 import { UserResponse } from 'src/app/models/interface/user/user/response/UserResponse';
 import { CardService } from 'src/app/service/card/card.service';
 import { UserService } from 'src/app/service/user/user.service';
@@ -22,13 +22,13 @@ import { ColumnService } from './../../../../service/column/column.service';
 export class DialogComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   public userDatas: Array<UserResponse> = [];
-  public card!: GetAllCardsResponse;
+  public card!: CardsResponse;
   public isError: boolean = false;
   public textError!: string;
   public isLoading: boolean = false;
   public dialogAction!: {
     event: EventAction;
-    data: GetAllCardsResponse[] | GetAllColumnsResponse[];
+    data: CardsResponse[] | ColumnsResponse[];
   };
   public selectedUser: Array<{ name: string; id: string }> = [];
   public selectedColumn: Array<{ title: string; id: string }> = [];
@@ -37,7 +37,7 @@ export class DialogComponent implements OnInit, OnDestroy {
   public editColumnEvent = Events.EDIT_COLUMN_EVENT;
   public addCardEvent = Events.ADD_CARD_EVENT;
   public editCardEvent = Events.EDIT_CARD_EVENT;
-  public alterColumnToCard = Events.EDIT_COLUMN_TO_CARD;
+  public editColumnToCard = Events.EDIT_COLUMN_TO_CARD;
 
   public columnForm = this.formBuilder.group({
     title: ['', Validators.required],
@@ -55,7 +55,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     responsable: ['', Validators.required],
   });
 
-  public alterColumnToCardForm = this.formBuilder.group({
+  public editColumnToCardForm = this.formBuilder.group({
     column: ['', Validators.required],
   });
 
@@ -103,7 +103,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     this.card = this.dialogAction?.data?.find(
       (item) => item.id === this.dialogAction.event.id
-    ) as GetAllCardsResponse;
+    ) as CardsResponse;
 
     if (this.card) {
       this.userResponsable = this.card.user;
@@ -275,15 +275,15 @@ export class DialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleAlterColumnToCard(): void {
-    if (this.alterColumnToCardForm.value && this.alterColumnToCardForm.valid) {
+  handleEditColumnToCard(): void {
+    if (this.editColumnToCardForm.value && this.editColumnToCardForm.valid) {
       const data = {
         id: this.dialogAction.event.id as string,
-        column: this.alterColumnToCardForm.value.column as string,
+        column: this.editColumnToCardForm.value.column as string,
       };
 
       this.cardService
-        .alterColumnToCard(data)
+        .editColumnToCard(data)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
