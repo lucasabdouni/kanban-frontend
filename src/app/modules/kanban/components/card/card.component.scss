@@ -35,12 +35,12 @@
   border-radius: 50%;
 }
 
-.btn-area .btn-plus {
-  background-color: var(--secondary);
+.btn-area .btn-alter-column {
+  background-color: var(--button);
   color: var(--text-dark);
 
   &:hover {
-    background-color: var(--secondary-hover);
+    background-color: var(--button-hover);
   }
 }
 

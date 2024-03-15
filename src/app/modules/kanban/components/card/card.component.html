@@ -9,14 +9,22 @@
   </div>
 
   <div class="btn-area">
-    <button class="btn btn-plus">
-      <i class="pi pi-plus"></i>
-    </button>
-    <button class="btn btn-alter">
+    <button
+      class="btn btn-alter"
+      (click)="handleEditCardEvent(cardEventEdit, id)"
+    >
       <i class="pi pi-pencil"></i>
     </button>
-    <button class="btn btn-trash">
+
+    <button class="btn btn-trash" (click)="handleCardDeleteEvent(title, id)">
       <i class="pi pi-trash"></i>
+    </button>
+
+    <button
+      class="btn btn-alter-column"
+      (click)="handleAlterColumnToCardEvent(cardAlterColumnEdit, id)"
+    >
+      <i class="pi pi-arrow-right-arrow-left"></i>
     </button>
   </div>
 </div>
