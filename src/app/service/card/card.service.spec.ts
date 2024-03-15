@@ -4,9 +4,9 @@ import {
   ApolloTestingController,
   ApolloTestingModule,
 } from 'apollo-angular/testing';
-import { AlterColumnToCard } from 'src/app/models/interface/card/request/AlterColumnToCard';
 import { CreateCardRequest } from 'src/app/models/interface/card/request/CreateCardRequest';
 import { EditCardRequest } from 'src/app/models/interface/card/request/EditCardRequest';
+import { EditColumnToCard } from 'src/app/models/interface/card/request/EditColumnToCard';
 import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
 import { CardService } from './card.service';
 
@@ -183,7 +183,7 @@ describe('CardService', () => {
     });
 
     it('should possible to edit a column to Card', () => {
-      const mockCards: AlterColumnToCard = {
+      const mockCards: EditColumnToCard = {
         id: '1',
         column: '2',
       };
@@ -201,7 +201,7 @@ describe('CardService', () => {
         },
       };
 
-      service.alterColumnToCard(mockCards).subscribe((cards) => {
+      service.editColumnToCard(mockCards).subscribe((cards) => {
         expect(cards).toEqual(mockCardsReturn);
         expect(cards.columnsTable.id).toEqual(mockCardsReturn.columnsTable.id);
       });
