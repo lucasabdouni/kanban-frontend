@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { createUserRequest } from 'src/app/models/interface/user/signUp/createUserRequest';
+import { createUserRequest } from 'src/app/models/interface/user/signUp/request/createUserRequest';
 import { UserService } from 'src/app/service/user/user.service';
 
 @Component({
