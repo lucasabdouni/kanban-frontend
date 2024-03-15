@@ -3,15 +3,22 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, map } from 'rxjs';
-import { AuthRequest } from '../../models/interface/user/auth/AuthRequest';
-import { AuthResponse } from '../../models/interface/user/auth/AuthResponse';
-import { createUserRequest } from '../../models/interface/user/signUp/createUserRequest';
-import { createUserResponse } from '../../models/interface/user/signUp/createUserResponse';
+import { refreshTokenResponse } from 'src/app/models/interface/user/auth/response/refreshToken';
+import { UserResponse } from 'src/app/models/interface/user/user/response/UserResponse';
+import { AuthRequest } from '../../models/interface/user/auth/request/AuthRequest';
+import { AuthResponse } from '../../models/interface/user/auth/response/AuthResponse';
+import { createUserRequest } from '../../models/interface/user/signUp/request/createUserRequest';
+import { createUserResponse } from '../../models/interface/user/signUp/response/createUserResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  private JWT_TOKEN = this.cookie.get('token');
+  private headers = {
+    Authorization: `Bearer ${this.JWT_TOKEN}`,
+  };
+
   constructor(private apollo: Apollo, private cookie: CookieService) {}
 
   auth({ email, password }: AuthRequest): Observable<AuthResponse> {
@@ -66,6 +73,38 @@ export class UserService {
         },
       })
       .pipe(map((result: any) => result.data.createUser as createUserResponse));
+  }
+
+  getAllUsers(): Observable<Array<UserResponse>> {
+    const query = gql`
+      query GetAllUsers {
+        users {
+          id
+          name
+        }
+      }
+    `;
+
+    return this.apollo
+      .query<Array<UserResponse>>({
+        query: query,
+        context: {
+          headers: this.headers,
+        },
+      })
+      .pipe(map((result: any) => result.data.users as UserResponse[]));
+  }
+
+  refreshToken(): Observable<refreshTokenResponse> {
+    return this.apollo
+      .mutate({
+        mutation: gql`
+          mutation revalidateToken {
+            token
+          }
+        `,
+      })
+      .pipe(map((result: any) => result.data.token as refreshTokenResponse));
   }
 
   isLoggedIn(): boolean {
