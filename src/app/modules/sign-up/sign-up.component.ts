@@ -45,13 +45,15 @@ export class SignUpComponent {
           },
           error: (error) => {
             this.isLoading = false;
-            console.log(error.message === 'E-mail already registered.');
             if (error.message === 'E-mail already registered.') {
               this.textError = 'Email já cadastrado !';
               this.isError = true;
             } else {
               this.textError = 'Desculpe, tente novamente !';
             }
+
+            this.isError = true;
+            this.isLoading = false;
           },
         });
     }
