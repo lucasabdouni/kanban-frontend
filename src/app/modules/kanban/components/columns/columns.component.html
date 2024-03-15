@@ -1,6 +1,21 @@
 <div class="column-container">
   <div class="column-header">
     <h3>{{ title }}</h3>
+
+    <div class="btn-area">
+      <button
+        class="btn btn-alter"
+        (click)="handleColumnEditEvent(columnEventEdit, id)"
+      >
+        <i class="pi pi-pencil"></i>
+      </button>
+      <button
+        class="btn btn-trash"
+        (click)="handleColumnDeleteEvent(title, id)"
+      >
+        <i class="pi pi-trash"></i>
+      </button>
+    </div>
   </div>
 
   <app-card
@@ -10,5 +25,12 @@
     [title]="item.title"
     [description]="item.description"
     [responsable]="item.user.name"
+    (editCardEvent)="handleEditCardEvent($event)"
+    (deleteCardEvent)="handleDeleteCardEvent($event)"
+    (alterColumnToCardEvent)="handleAlterColumnToCardEvent($event)"
   ></app-card>
+
+  <button class="btn-plus" (click)="handleAddCardEvent(AddCardEvent, id)">
+    <i class="pi pi-plus"></i>
+  </button>
 </div>
