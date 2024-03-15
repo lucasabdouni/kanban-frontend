@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthRequest } from 'src/app/models/interface/user/auth/AuthRequest';
+import { AuthRequest } from 'src/app/models/interface/user/auth/request/AuthRequest';
 import { UserService } from '../../service/user/user.service';
 
 @Component({
