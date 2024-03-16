@@ -95,32 +95,38 @@ export class DialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dialogAction = this.ref.data;
-    this.getAllUserDatas();
 
-    this.columnTitle = this.dialogAction?.data?.find(
-      (item) => item.id === this.dialogAction.event.id
-    )?.title;
+    if (this.dialogAction && this.dialogAction.event) {
+      this.getAllUserDatas();
 
-    this.card = this.dialogAction?.data?.find(
-      (item) => item.id === this.dialogAction.event.id
-    ) as CardsResponse;
+      this.columnTitle = this.dialogAction?.data?.find(
+        (item) => item.id === this.dialogAction.event.id
+      )?.title;
 
-    if (this.card) {
-      this.userResponsable = this.card.user;
-    }
+      this.card = this.dialogAction?.data?.find(
+        (item) => item.id === this.dialogAction.event.id
+      ) as CardsResponse;
 
-    if (this.userResponsable) {
-      this.editCardForm.patchValue({
-        title: this.card.title,
-        description: this.card.description,
-        responsable: this.userResponsable.id,
-      });
+      if (this.card) {
+        this.userResponsable = this.card.user;
+      }
+
+      if (this.userResponsable) {
+        this.editCardForm.patchValue({
+          title: this.card.title,
+          description: this.card.description,
+          responsable: this.userResponsable.id,
+        });
+      }
     }
   }
 
-  closeModal(dataType: string | null): void {
+  closeModal(
+    dataType: string | null,
+    data?: ColumnsResponse | CardsResponse
+  ): void {
     if (this.ref) {
-      this.modalRef.close({ changed: true, dataType: dataType });
+      this.modalRef.close({ changed: true, dataType: dataType, data });
     }
   }
 
@@ -137,10 +143,17 @@ export class DialogComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.isError = false;
-            this.isLoading = false;
-            if (this.ref) {
-              this.closeModal('columns');
+            if (response) {
+              const newColumn: ColumnsResponse = {
+                id: response.id,
+                title: response.title,
+              };
+
+              this.isError = false;
+              this.isLoading = false;
+              if (this.ref) {
+                this.closeModal('columns', newColumn);
+              }
             }
           },
 
@@ -169,10 +182,21 @@ export class DialogComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.isError = false;
-            this.isLoading = false;
-            if (this.ref) {
-              this.closeModal('columns');
+            if (response) {
+              this.isError = false;
+              this.isLoading = false;
+              if (this.ref) {
+                const editColumn: ColumnsResponse = {
+                  id: response.id,
+                  title: response.title,
+                };
+
+                this.isError = false;
+                this.isLoading = false;
+                if (this.ref) {
+                  this.closeModal('columns', editColumn);
+                }
+              }
             }
           },
           error: (err) => {
@@ -201,10 +225,29 @@ export class DialogComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (response) => {
-              this.isError = false;
-              this.isLoading = false;
-              if (this.ref) {
-                this.closeModal('cards');
+              if (response) {
+                this.isError = false;
+                this.isLoading = false;
+                if (this.ref) {
+                  const editCard: CardsResponse = {
+                    id: response.id,
+                    title: response.title,
+                    description: response.description,
+                    columnsTable: {
+                      id: response.columnsTable.id,
+                    },
+                    user: {
+                      id: response.user.id,
+                      name: response.user.name,
+                    },
+                  };
+
+                  this.isError = false;
+                  this.isLoading = false;
+                  if (this.ref) {
+                    this.closeModal('cards', editCard);
+                  }
+                }
               }
             },
             error: (err) => {
@@ -226,10 +269,27 @@ export class DialogComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (response) => {
-              this.isError = false;
-              this.isLoading = false;
-              if (this.ref) {
-                this.closeModal('cards');
+              if (response) {
+                if (this.ref) {
+                  const editCard: CardsResponse = {
+                    id: response.id,
+                    title: response.title,
+                    description: response.description,
+                    columnsTable: {
+                      id: response.columnsTable.id,
+                    },
+                    user: {
+                      id: response.user.id,
+                      name: response.user.name,
+                    },
+                  };
+
+                  this.isError = false;
+                  this.isLoading = false;
+                  if (this.ref) {
+                    this.closeModal('cards', editCard);
+                  }
+                }
               }
             },
             error: (err) => {
@@ -259,10 +319,25 @@ export class DialogComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.isError = false;
-            this.isLoading = false;
-            if (this.ref) {
-              this.closeModal('cards');
+            if (response) {
+              const addCard: CardsResponse = {
+                id: response.id,
+                title: response.title,
+                description: response.description,
+                columnsTable: {
+                  id: response.columnsTable.id,
+                },
+                user: {
+                  id: response.user.id,
+                  name: response.user.name,
+                },
+              };
+
+              this.isError = false;
+              this.isLoading = false;
+              if (this.ref) {
+                this.closeModal('cards', addCard);
+              }
             }
           },
           error: (error) => {
@@ -287,10 +362,29 @@ export class DialogComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.isError = false;
-            this.isLoading = false;
-            if (this.ref) {
-              this.closeModal('cards');
+            if (response) {
+              this.isError = false;
+              this.isLoading = false;
+              if (this.ref) {
+                const editCard: CardsResponse = {
+                  id: response.id,
+                  title: response.title,
+                  description: response.description,
+                  columnsTable: {
+                    id: response.columnsTable.id,
+                  },
+                  user: {
+                    id: response.user.id,
+                    name: response.user.name,
+                  },
+                };
+
+                this.isError = false;
+                this.isLoading = false;
+                if (this.ref) {
+                  this.closeModal('cards', editCard);
+                }
+              }
             }
           },
           error: (err) => {
