@@ -23,7 +23,11 @@
     (ngSubmit)="handleSubmitEditColumn()"
     *ngIf="dialogAction.event.action === editColumnEvent"
   >
-    <input [placeholder]="columnTitle" formControlName="title" />
+    <input
+      [placeholder]="columnTitle"
+      formControlName="title"
+      id="input-alter-title-column"
+    />
     <button type="submit" [disabled]="!this.columnForm.valid">Enviar</button>
 
     <app-message-error
@@ -36,10 +40,18 @@
   <form
     [formGroup]="editCardForm"
     (ngSubmit)="handleSubmitEditCard()"
-    *ngIf="dialogAction.event.action === editCardEvent"
+    *ngIf="dialogAction.event.action === editCardEvent && !isLoadingUser"
   >
-    <input [placeholder]="cardTitle" formControlName="title" />
-    <input [placeholder]="cardTitle" formControlName="description" />
+    <input
+      [placeholder]="cardTitle"
+      formControlName="title"
+      id="input-alter-title"
+    />
+    <input
+      [placeholder]="cardTitle"
+      formControlName="description"
+      id="input-alter-description"
+    />
     <select formControlName="responsable">
       <option
         *ngFor="let user of userDatas"
@@ -62,11 +74,11 @@
   <form
     [formGroup]="addCardForm"
     (ngSubmit)="handleSubmitAddCard()"
-    *ngIf="dialogAction.event.action === addCardEvent"
+    *ngIf="dialogAction.event.action === addCardEvent && !isLoadingUser"
   >
     <input placeholder="Titulo" formControlName="title" />
     <input placeholder="Descrição" formControlName="description" />
-    <select formControlName="responsable">
+    <select formControlName="responsable" id="select-responsable">
       <option value="" disabled selected hidden>Selecione</option>
       <option *ngFor="let user of userDatas" [ngValue]="user.id">
         {{ user.name }}
@@ -87,7 +99,7 @@
     (ngSubmit)="handleEditColumnToCard()"
     *ngIf="dialogAction.event.action === editColumnToCard"
   >
-    <select formControlName="column">
+    <select formControlName="column" id="select-column">
       <option value="" disabled selected hidden>Selecione</option>
       <option *ngFor="let column of dialogAction.data" [ngValue]="column.id">
         {{ column.title }}

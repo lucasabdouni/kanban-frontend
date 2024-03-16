@@ -21,6 +21,7 @@ import { ColumnService } from './../../../../service/column/column.service';
 })
 export class DialogComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
+  public isLoadingUser: boolean = true;
   public userDatas: Array<UserResponse> = [];
   public card!: CardsResponse;
   public isError: boolean = false;
@@ -83,11 +84,12 @@ export class DialogComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (response) => {
             if (response.length > 0) {
+              this.isLoadingUser = false;
               this.userDatas = response;
             }
           },
           error(err) {
-            console.log('error');
+            console.log(err);
           },
         });
     }
