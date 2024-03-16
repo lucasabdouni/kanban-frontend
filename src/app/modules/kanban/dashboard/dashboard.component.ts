@@ -23,8 +23,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
   public columnsDatas: Array<ColumnsResponse> = [];
-  public cardsDatas: Array<CardsResponse> = [];
-  public userDatas: Array<UserResponse> = [];
+  public cardsDatas: CardsResponse[] = [];
+  public userDatas: UserResponse[] = [];
 
   public addColumnEvent = Events.ADD_COLUMN_EVENT;
   public editColumnEvent = Events.EDIT_COLUMN_EVENT;
@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   handleColumnEvent(action: string, id?: string): void {
     if (action === this.addColumnEvent) {
-      this.handleEventAction({ action });
+      this.handleEventAction({ action }, this.columnsDatas);
     }
 
     if (action === this.editColumnEvent) {
@@ -113,11 +113,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   handleCardEvent(action: string, id?: string): void {
     if (action === this.addCardEvent) {
-      this.handleEventAction({ action, id });
+      this.handleEventAction({ action, id }, this.cardsDatas);
     }
 
     if (action === this.editCardEvent) {
       this.handleEventAction({ action, id }, this.cardsDatas);
+    }
+  }
+
+  handleEditArrayCards(card: CardsResponse): void {
+    console.log('chamou a função');
+    let newCardsDatas = [...this.cardsDatas];
+
+    const cardIndex = this.cardsDatas.findIndex((item) => item.id === card.id);
+
+    if (cardIndex !== -1) {
+      console.log('alterou');
+      newCardsDatas[cardIndex] = card;
+      this.cardsDatas = newCardsDatas;
+    } else {
+      newCardsDatas = [...this.cardsDatas, card];
+      this.cardsDatas = newCardsDatas;
+    }
+  }
+
+  handleEditArrayColumns(column: ColumnsResponse): void {
+    let newColumnsDatas = [...this.columnsDatas];
+
+    const columnIndex = this.columnsDatas.findIndex(
+      (item) => item.id === column.id
+    );
+
+    if (columnIndex !== -1) {
+      newColumnsDatas[columnIndex] = column;
+      this.columnsDatas = newColumnsDatas;
+    } else {
+      newColumnsDatas = [...this.columnsDatas, column];
+      this.columnsDatas = newColumnsDatas;
     }
   }
 
@@ -146,10 +178,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
         next: (result: any) => {
           if (result && result.changed) {
-            if (result.dataType === 'cards') {
-              this.getAllCardsDatas();
-            } else if (result.dataType === 'columns') {
-              this.getAllColumnsDatas();
+            if (result.dataType === 'cards' && result.data) {
+              const card: CardsResponse = {
+                id: result.data.id as string,
+                title: result.data.title as string,
+                description: result.data.description as string,
+                columnsTable: {
+                  id: result.data.columnsTable.id as string,
+                },
+                user: {
+                  id: result.data.user.id as string,
+                  name: result.data.user.name as string,
+                },
+              };
+
+              this.handleEditArrayCards(card);
+            } else if (result.dataType === 'columns' && result.data) {
+              const column: ColumnsResponse = {
+                id: result.data.id,
+                title: result.data.title,
+              };
+
+              this.handleEditArrayColumns(column);
             }
           }
         },
