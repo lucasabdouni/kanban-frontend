@@ -14,12 +14,11 @@ import { createUserResponse } from '../../models/interface/user/signUp/response/
   providedIn: 'root',
 })
 export class UserService {
-  private JWT_TOKEN = this.cookie.get('token');
-  private headers = {
-    Authorization: `Bearer ${this.JWT_TOKEN}`,
-  };
-
   constructor(private apollo: Apollo, private cookie: CookieService) {}
+
+  private getJwtToken(): string {
+    return this.cookie.get('token');
+  }
 
   auth({ email, password }: AuthRequest): Observable<AuthResponse> {
     return this.apollo
@@ -76,6 +75,10 @@ export class UserService {
   }
 
   getAllUsers(): Observable<Array<UserResponse>> {
+    const JWT_TOKEN = this.getJwtToken();
+    const headers = {
+      Authorization: `Bearer ${JWT_TOKEN}`,
+    };
     const query = gql`
       query GetAllUsers {
         users {
@@ -89,7 +92,7 @@ export class UserService {
       .query<Array<UserResponse>>({
         query: query,
         context: {
-          headers: this.headers,
+          headers: headers,
         },
       })
       .pipe(map((result: any) => result.data.users as UserResponse[]));
