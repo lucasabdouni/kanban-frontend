@@ -8,7 +8,6 @@ import { DeleteCardActions } from 'src/app/models/interface/card/actions/DeleteC
 import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
 import { DeleteColumnsActions } from 'src/app/models/interface/column/actions/DeleteColumnsActions';
 import { ColumnsResponse } from 'src/app/models/interface/column/response/ColumnsResponse';
-import { UserResponse } from 'src/app/models/interface/user/user/response/UserResponse';
 import { UserService } from 'src/app/service/user/user.service';
 import { DialogComponent } from '../components/dialog/dialog.component';
 import { CardService } from './../../../service/card/card.service';
@@ -24,7 +23,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private ref!: DynamicDialogRef;
   public columnsDatas: Array<ColumnsResponse> = [];
   public cardsDatas: CardsResponse[] = [];
-  public userDatas: UserResponse[] = [];
 
   public addColumnEvent = Events.ADD_COLUMN_EVENT;
   public editColumnEvent = Events.EDIT_COLUMN_EVENT;
@@ -42,7 +40,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getAllColumnsDatas();
     this.getAllCardsDatas();
-    this.getAllUserDatas();
   }
 
   getAllColumnsDatas() {
@@ -69,22 +66,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.cardsDatas = response;
-          }
-        },
-        error(err) {
-          console.log('error');
-        },
-      });
-  }
-
-  getAllUserDatas() {
-    this.userService
-      .getAllUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response.length > 0) {
-            this.userDatas = response;
           }
         },
         error(err) {
@@ -122,13 +103,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   handleEditArrayCards(card: CardsResponse): void {
-    console.log('chamou a função');
     let newCardsDatas = [...this.cardsDatas];
 
     const cardIndex = this.cardsDatas.findIndex((item) => item.id === card.id);
 
     if (cardIndex !== -1) {
-      console.log('alterou');
       newCardsDatas[cardIndex] = card;
       this.cardsDatas = newCardsDatas;
     } else {
@@ -175,35 +154,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
           },
         },
       });
-      this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
-        next: (result: any) => {
-          if (result && result.changed) {
-            if (result.dataType === 'cards' && result.data) {
-              const card: CardsResponse = {
-                id: result.data.id as string,
-                title: result.data.title as string,
-                description: result.data.description as string,
-                columnsTable: {
-                  id: result.data.columnsTable.id as string,
-                },
-                user: {
-                  id: result.data.user.id as string,
-                  name: result.data.user.name as string,
-                },
-              };
+      if (this.ref) {
+        this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
+          next: (result: any) => {
+            if (result && result.changed) {
+              if (result.dataType === 'cards' && result.data) {
+                const card: CardsResponse = {
+                  id: result.data.id as string,
+                  title: result.data.title as string,
+                  description: result.data.description as string,
+                  columnsTable: {
+                    id: result.data.columnsTable.id as string,
+                  },
+                  user: {
+                    id: result.data.user.id as string,
+                    name: result.data.user.name as string,
+                  },
+                };
 
-              this.handleEditArrayCards(card);
-            } else if (result.dataType === 'columns' && result.data) {
-              const column: ColumnsResponse = {
-                id: result.data.id,
-                title: result.data.title,
-              };
+                this.handleEditArrayCards(card);
+              } else if (result.dataType === 'columns' && result.data) {
+                const column: ColumnsResponse = {
+                  id: result.data.id,
+                  title: result.data.title,
+                };
 
-              this.handleEditArrayColumns(column);
+                this.handleEditArrayColumns(column);
+              }
             }
-          }
-        },
-      });
+          },
+        });
+      }
     }
   }
 
