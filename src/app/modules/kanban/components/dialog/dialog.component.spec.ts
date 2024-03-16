@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { of } from 'rxjs';
 import { CardsResponse } from 'src/app/models/interface/card/response/CardsResponse';
+import { CreateColumnRequest } from 'src/app/models/interface/column/request/CreateColumnRequest';
 import { CardService } from 'src/app/service/card/card.service';
 import { ColumnService } from 'src/app/service/column/column.service';
 import { UserService } from 'src/app/service/user/user.service';
@@ -43,8 +44,10 @@ describe('DialogComponent', () => {
         { provide: UserService, useValue: userServiceSpyObj },
         { provide: ColumnService, useValue: columnServiceSpyObj },
         { provide: DynamicDialogRef, useValue: dialogRefSpy },
-        // Fornecer um objeto vazio para DynamicDialogConfig
-        { provide: DynamicDialogConfig, useValue: {} },
+        {
+          provide: DynamicDialogConfig,
+          useValue: { data: { event: { action: 'addCardEvent' } } },
+        },
       ],
     }).compileComponents();
 
@@ -64,32 +67,168 @@ describe('DialogComponent', () => {
   });
 
   it('should call createCard method when handleSubmitAddCard is called', () => {
-    const mockRequest = {
-      title: 'Test Title',
-      description: 'Test Description',
-      user: 'user_id',
-      column: 'column_id',
-      responsable: null,
+    const formMock = {
+      title: 'new title',
+      description: 'new description',
+      responsable: '1',
+    };
+
+    component.userDatas = [
+      { id: '1', name: 'User 1' },
+      { id: '2', name: 'User 2' },
+    ];
+
+    const request = {
+      title: 'new title',
+      description: 'new description',
+      user: '1',
+      column: '1',
     };
 
     const mockResponse: CardsResponse = {
-      id: '123',
-      title: mockRequest.title,
-      description: mockRequest.description,
+      id: '1',
+      title: 'new title',
+      description: 'new description',
+      user: {
+        id: '1',
+        name: 'John Doe',
+      },
       columnsTable: {
         id: '1',
-      },
-      user: {
-        id: mockRequest.user,
-        name: 'User Name',
       },
     };
 
     cardServiceSpy.createCard.and.returnValue(of(mockResponse));
+    component.dialogAction.event.id = '1';
 
-    component.addCardForm.setValue(mockRequest);
+    component.addCardForm.setValue(formMock);
     component.handleSubmitAddCard();
 
-    expect(cardServiceSpy.createCard).toHaveBeenCalledWith(mockRequest);
+    expect(cardServiceSpy.createCard).toHaveBeenCalledWith(request);
+    cardServiceSpy.createCard(request).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  it('should call createColumn method when handleSubmitAddColumn is called', () => {
+    const mockRequest: CreateColumnRequest = {
+      title: 'new column',
+    };
+
+    const response = {
+      id: '1',
+      title: 'new column',
+    };
+
+    columnServiceSpy.createColumn.and.returnValue(of(response));
+
+    component.columnForm.setValue(mockRequest);
+    component.handleSubmitAddColumn();
+
+    expect(columnServiceSpy.createColumn).toHaveBeenCalledWith(mockRequest);
+    columnServiceSpy.createColumn(mockRequest).subscribe((response) => {
+      expect(response).toEqual(response);
+    });
+  });
+
+  it('should call editColumn method when handleSubmitEditColumn is called', () => {
+    const formMock = {
+      title: 'update column',
+    };
+
+    const request = {
+      id: '1',
+      title: 'update column',
+    };
+
+    const mockResponse = {
+      id: '1',
+      title: 'update column',
+    };
+
+    columnServiceSpy.editColumn.and.returnValue(of(mockResponse));
+    component.dialogAction.event.id = '1';
+
+    component.columnForm.setValue(formMock);
+    component.handleSubmitEditColumn();
+
+    expect(columnServiceSpy.editColumn).toHaveBeenCalledWith(mockResponse);
+    columnServiceSpy.editColumn(request).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  it('should call editCard method when handleSubmitEditCard is called', () => {
+    const formMock = {
+      title: 'update column',
+      description: 'update description',
+      responsable: '1',
+    };
+
+    const request = {
+      id: '1',
+      title: 'update column',
+      description: 'update description',
+    };
+
+    const mockResponse = {
+      id: '1',
+      title: 'new card',
+      description: 'new description',
+      user: {
+        id: '1',
+        name: 'John Doe',
+      },
+      columnsTable: {
+        id: '1',
+      },
+    };
+
+    cardServiceSpy.editCard.and.returnValue(of(mockResponse));
+    component.dialogAction.event.id = '1';
+    component.card = mockResponse;
+
+    component.editCardForm.setValue(formMock);
+    component.handleSubmitEditCard();
+
+    expect(cardServiceSpy.editCard).toHaveBeenCalledWith(request);
+    cardServiceSpy.editCard(request).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  it('should call editCardToColumn method when handleSubmitEditCardToColumn is called', () => {
+    const mockForm = {
+      column: '1',
+    };
+
+    const request = {
+      id: '1',
+      column: '1',
+    };
+
+    const mockResponse = {
+      id: '1',
+      title: 'new card',
+      description: 'new description',
+      user: {
+        id: '1',
+        name: 'John Doe',
+      },
+      columnsTable: {
+        id: '1',
+      },
+    };
+
+    cardServiceSpy.editColumnToCard.and.returnValue(of(mockResponse));
+    component.dialogAction.event.id = '1';
+
+    component.editColumnToCardForm.setValue(mockForm);
+    component.handleEditColumnToCard();
+
+    expect(cardServiceSpy.editColumnToCard).toHaveBeenCalledWith(request);
+    cardServiceSpy.editColumnToCard(request).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
   });
 });
