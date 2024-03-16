@@ -74,6 +74,13 @@ export class CardService {
                 id
                 title
                 description
+                columnsTable {
+                  id
+                }
+                user {
+                  id
+                  name
+                }
               }
             }
           `,
@@ -112,6 +119,13 @@ export class CardService {
                 id
                 title
                 description
+                columnsTable {
+                  id
+                }
+                user {
+                  id
+                  name
+                }
               }
             }
           `,
@@ -137,12 +151,19 @@ export class CardService {
               id
               title
               description
+              columnsTable {
+                id
+              }
+              user {
+                id
+                name
+              }
             }
           }
         `,
         variables: {
           id: id,
-          user: user, // ou apenas user, dependendo do tipo de 'user'
+          user: user,
         },
         context: {
           headers: this.headers,
@@ -165,6 +186,13 @@ export class CardService {
               id
               title
               description
+              columnsTable {
+                id
+              }
+              user {
+                id
+                name
+              }
             }
           }
         `,
