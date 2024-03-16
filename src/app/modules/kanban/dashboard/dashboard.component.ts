@@ -176,7 +176,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.getAllColumnsDatas();
+            if (response) {
+              this.columnsDatas = this.columnsDatas.filter(
+                (column) => column.id !== id
+              );
+            }
           },
           error: (err) => {
             console.log(err);
