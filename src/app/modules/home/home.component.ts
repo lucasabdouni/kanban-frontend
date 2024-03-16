@@ -55,10 +55,12 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (error.message === 'Invalid credentials') {
               this.textError = 'Credenciais inválidas!';
               this.isError = true;
+              this.isLoading = false;
             } else {
               this.textError =
                 'Erro ao efetuar login. Por favor, tente novamente mais tarde.';
               this.isError = true;
+              this.isLoading = false;
             }
           },
         });
