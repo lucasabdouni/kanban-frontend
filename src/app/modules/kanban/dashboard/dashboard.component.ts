@@ -176,7 +176,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            if (response) {
+            if (response === true) {
               this.columnsDatas = this.columnsDatas.filter(
                 (column) => column.id !== id
               );
@@ -207,7 +207,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.getAllCardsDatas();
+            if (response === true) {
+              this.cardsDatas = this.cardsDatas.filter(
+                (card) => card.id !== id
+              );
+            }
           },
           error: (err) => {
             console.log(err);
